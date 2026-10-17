@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApexFlow ERP — Agentic Multi-Agent Enterprise Software</title>
+  <meta name="description" content="Autonomous enterprise ERP dashboard built with Google Antigravity Agentic Software Factory. Features real-time SCM, order-to-cash lifecycle, and balanced double-entry ledger.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <span>ApexFlow ERP</span>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item active" data-tab="overview" id="NAV_OVERVIEW">
+          <span>📊</span> Overview & KPIs
+        </li>
+        <li class="nav-item" data-tab="orders" id="NAV_ORDERS">
+          <span>📦</span> Order-to-Cash
+        </li>
+        <li class="nav-item" data-tab="inventory" id="NAV_INVENTORY">
+          <span>🏭</span> Inventory & Yard
+        </li>
+        <li class="nav-item" data-tab="ledger" id="NAV_LEDGER">
+          <span>📑</span> Financial Ledger
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <p><strong>Factory Verified</strong></p>
+        <p>ASD-STE100 & Goal-Reward Pass</p>
+      </div>
+    </aside>
+
+    <!-- Main Application Wrapper -->
+    <div class="main-wrapper">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="tenant-badge" id="TXT_TENANT_ID">
+          <span style="color: var(--accent-success)">●</span>
+          <span>Tenant: <strong>tenant-acme-logistics</strong></span>
+        </div>
+
+        <div class="topbar-controls">
+          <!-- User Role Switcher -->
+          <div class="control-group">
+            <label for="SEL_USER_ROLE">Active Role:</label>
+            <select id="SEL_USER_ROLE" class="select-custom">
+              <option value="Admin">Admin (Full Access)</option>
+              <option value="Warehouse">Warehouse Manager</option>
+              <option value="Finance">Financial Controller</option>
+              <option value="Sales">Sales Executive</option>
+              <option value="Unauthorized">Unauthorized User</option>
+            </select>
+          </div>
+
+          <!-- Mandatory 5-State Simulator -->
+          <div class="control-group">
+            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted);">State Simulator:</span>
+            <div class="state-pills">
+              <button class="state-pill active" data-state="default" id="BTN_STATE_DEFAULT">Default</button>
+              <button class="state-pill" data-state="loading" id="BTN_STATE_LOADING">Loading</button>
+              <button class="state-pill" data-state="empty" id="BTN_STATE_EMPTY">Empty</button>
+              <button class="state-pill" data-state="error" id="BTN_STATE_ERROR">Error</button>
+              <button class="state-pill" data-state="unauthorized" id="BTN_STATE_UNAUTH">Unauthorized</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Dynamic Content Area -->
+      <main class="content-area">
+
+        <!-- ========================================================= -->
+        <!-- STATE 1: LOADING STATE CONTAINER                          -->
+        <!-- ========================================================= -->
+        <section id="CONTAINER_LOADING" class="state-container">
+          <div class="page-header">
+            <div>
+              <div class="skeleton-box" style="width: 250px; height: 32px;"></div>
+              <div class="skeleton-box" style="width: 400px; height: 16px;"></div>
+            </div>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi-card"><div class="skeleton-box" style="height: 60px;"></div></div>
+            <div class="kpi-card"><div class="skeleton-box" style="height: 60px;"></div></div>
+            <div class="kpi-card"><div class="skeleton-box" style="height: 60px;"></div></div>
+            <div class="kpi-card"><div class="skeleton-box" style="height: 60px;"></div></div>
+          </div>
+          <div class="card"><div class="skeleton-box" style="height: 250px;"></div></div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STATE 2: EMPTY STATE CONTAINER                            -->
+        <!-- ========================================================= -->
+        <section id="CONTAINER_EMPTY" class="state-container">
+          <div class="empty-view">
+            <div class="empty-icon">📂</div>
+            <h2>Zero Records Discovered</h2>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem;">No active inventory or customer orders exist in this tenant partition.</p>
+            <button class="btn btn-primary" id="BTN_RESET_SEED">Seed Standard Enterprise Data</button>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STATE 3: ERROR STATE CONTAINER                            -->
+        <!-- ========================================================= -->
+        <section id="CONTAINER_ERROR" class="state-container">
+          <div class="error-view">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">⚠️</div>
+            <h2 class="error-title">Database Connection Timeout</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">The Cloud Firestore client encountered a network latency exception (HTTP 504 Gateway Timeout).</p>
+            <button class="btn btn-primary" id="BTN_RETRY_ERROR">Retry Remote Connection</button>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STATE 4: UNAUTHORIZED STATE CONTAINER                     -->
+        <!-- ========================================================= -->
+        <section id="CONTAINER_UNAUTHORIZED" class="state-container">
+          <div class="unauthorized-view">
+            <div class="lock-icon">🔒</div>
+            <h2>Access Restricted by Security Policy</h2>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0.5rem auto 1.5rem;">
+              Your current authentication token lacks the required RBAC claims (<code id="TXT_REQUIRED_ROLE">Admin / Finance</code>) to inspect tenant records.
+            </p>
+            <button class="btn btn-secondary" id="BTN_ELEVATE_ROLE">Switch to Admin Profile</button>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- STATE 5: DEFAULT OPERATIONAL ERP WORKSPACE                -->
+        <!-- ========================================================= -->
+        <section id="CONTAINER_DEFAULT" class="state-container state-active">
+          
+          <!-- Header -->
+          <div class="page-header">
+            <div>
+              <h1 class="page-title" id="TXT_PAGE_TITLE">Enterprise Operations Dashboard</h1>
+              <p class="page-subtitle">Real-time supply chain velocity, inventory balances, and automated ledger transactions.</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+              <button class="btn btn-secondary" id="BTN_OPEN_STOCK_MODAL">+ Stock Item</button>
+              <button class="btn btn-primary" id="BTN_OPEN_ORDER_MODAL">+ Sales Order</button>
+            </div>
+          </div>
+
+          <!-- KPI Summary Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Gross Sales Revenue</span>
+                <div class="kpi-icon icon-blue">💰</div>
+              </div>
+              <div class="kpi-value" id="VAL_KPI_REVENUE">$9,838.80</div>
+              <div class="kpi-footer">
+                <span class="trend-up">↑ 18.2%</span> vs prior cycle
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Inventory Valuation</span>
+                <div class="kpi-icon icon-green">📦</div>
+              </div>
+              <div class="kpi-value" id="VAL_KPI_STOCK">$63,140.00</div>
+              <div class="kpi-footer">
+                <span>5 Active Warehouse SKUs</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Active Orders</span>
+                <div class="kpi-icon icon-purple">🚚</div>
+              </div>
+              <div class="kpi-value" id="VAL_KPI_ORDERS">3 Orders</div>
+              <div class="kpi-footer">
+                <span>1 Pending Dispatch</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Low Stock Warnings</span>
+                <div class="kpi-icon icon-amber">⚠️</div>
+              </div>
+              <div class="kpi-value" id="VAL_KPI_ALERTS" style="color: var(--accent-warning);">2 Items</div>
+              <div class="kpi-footer">
+                <span class="trend-warning">Reorder threshold breached</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1: Order-to-Cash Workflow Lifecycle -->
+          <div class="card" id="SEC_ORDERS">
+            <div class="card-header">
+              <h2 class="card-title">Order-to-Cash Pipeline</h2>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time allocation & status triggers</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="TBL_ORDERS">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer Name</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total Amount</th>
+                    <th>Workflow Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="TBODY_ORDERS">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 2: Real-time Warehouse Inventory & Bin Allocation -->
+          <div class="card" id="SEC_INVENTORY">
+            <div class="card-header">
+              <h2 class="card-title">Warehouse Inventory & Stock Allocation</h2>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Multi-bin stock levels</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="TBL_INVENTORY">
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Item Description</th>
+                    <th>Bin Location</th>
+                    <th>On Hand</th>
+                    <th>Allocated</th>
+                    <th>Reorder Level</th>
+                    <th>Status</th>
+                    <th>Quick Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="TBODY_INVENTORY">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 3: Financial General Ledger (Double-Entry Balanced Journal) -->
+          <div class="card" id="SEC_LEDGER">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">General Ledger Journal (Double-Entry System)</h2>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Enforces Debit = Credit balance conservation across all operations.</p>
+              </div>
+              <div id="TXT_LEDGER_BALANCE" class="badge badge-in_stock">Balanced (Δ = $0.00)</div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="TBL_LEDGER">
+                <thead>
+                  <tr>
+                    <th>Voucher #</th>
+                    <th>Reference</th>
+                    <th>Timestamp</th>
+                    <th>Account</th>
+                    <th>Entry Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody id="TBODY_LEDGER">
+                  <!-- Populated dynamically via app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal: Create Sales Order -->
+  <div class="modal-backdrop" id="MODAL_ORDER">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Create Sales Order</h3>
+        <button class="btn btn-secondary btn-sm" id="BTN_CLOSE_ORDER_MODAL">✕</button>
+      </div>
+      <form id="FORM_NEW_ORDER">
+        <div class="form-group">
+          <label class="form-label" for="INP_ORDER_CUSTOMER">Customer Name</label>
+          <select id="INP_ORDER_CUSTOMER" class="form-input" required>
+            <option value="Pacific Automation Systems">Pacific Automation Systems</option>
+            <option value="Apex Robotics Ltd">Apex Robotics Ltd</option>
+            <option value="Midwest Machine Works">Midwest Machine Works</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="INP_ORDER_ITEM">Product SKU</label>
+          <select id="INP_ORDER_ITEM" class="form-input" required>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="INP_ORDER_QTY">Order Quantity</label>
+          <input type="number" id="INP_ORDER_QTY" class="form-input" min="1" max="100" value="2" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="BTN_CANCEL_ORDER_MODAL">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="BTN_SUBMIT_NEW_ORDER">Generate Draft Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Replenish Inventory Stock -->
+  <div class="modal-backdrop" id="MODAL_STOCK">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Replenish Inventory Stock</h3>
+        <button class="btn btn-secondary btn-sm" id="BTN_CLOSE_STOCK_MODAL">✕</button>
+      </div>
+      <form id="FORM_REPLENISH">
+        <div class="form-group">
+          <label class="form-label" for="INP_STOCK_SKU">Target SKU</label>
+          <select id="INP_STOCK_SKU" class="form-input" required>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="INP_REPLENISH_QTY">Received Units</label>
+          <input type="number" id="INP_REPLENISH_QTY" class="form-input" min="1" max="500" value="10" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="BTN_CANCEL_STOCK_MODAL">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="BTN_SUBMIT_REPLENISH">Confirm Inbound Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

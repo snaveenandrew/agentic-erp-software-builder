@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for authentication, tenant isolation, and RBAC
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isTenantMember(tenantId) {
+      return isAuthenticated() && request.auth.token.tenantId == tenantId;
+    }
+
+    function hasRole(tenantId, role) {
+      return isTenantMember(tenantId) && request.auth.token.role == role;
+    }
+
+    function isAdmin(tenantId) {
+      return hasRole(tenantId, 'Admin');
+    }
+
+    function isWarehouse(tenantId) {
+      return hasRole(tenantId, 'Warehouse') || isAdmin(tenantId);
+    }
+
+    function isFinance(tenantId) {
+      return hasRole(tenantId, 'Finance') || isAdmin(tenantId);
+    }
+
+    function isSales(tenantId) {
+      return hasRole(tenantId, 'Sales') || isAdmin(tenantId);
+    }
+
+    // Multi-tenant root container
+    match /tenants/{tenantId} {
+      allow read: if isTenantMember(tenantId);
+      allow write: if isAdmin(tenantId);
+
+      // Warehouse Inventory Collection
+      match /inventory/{itemId} {
+        allow read: if isTenantMember(tenantId);
+        allow create, update: if isWarehouse(tenantId);
+        allow delete: if isAdmin(tenantId);
+      }
+
+      // Sales Orders Collection
+      match /orders/{orderId} {
+        allow read: if isTenantMember(tenantId);
+        allow create: if isSales(tenantId);
+        allow update: if isWarehouse(tenantId) || isSales(tenantId);
+        allow delete: if isAdmin(tenantId);
+      }
+
+      // Financial General Ledger (Double-Entry Journal)
+      match /ledger/{journalId} {
+        allow read: if isFinance(tenantId);
+        allow create, update: if isFinance(tenantId);
+        allow delete: if false; // Financial ledger records are strictly append-only
+      }
+
+      // Customers & Suppliers Master Data
+      match /parties/{partyId} {
+        allow read: if isTenantMember(tenantId);
+        allow write: if isSales(tenantId) || isFinance(tenantId);
+      }
+    }
+
+    // Reject all requests outside the tenant path
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

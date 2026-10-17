@@ -1,0 +1,147 @@
+{
+  "tenantId": "tenant-acme-logistics",
+  "companyName": "Acme Global Supply & Logistics Corp",
+  "currency": "USD",
+  "inventory": [
+    {
+      "id": "INV-101",
+      "sku": "SKU-MOT-001",
+      "name": "Industrial Servo Motor 750W",
+      "category": "Motion Control",
+      "binLocation": "WH-A-12-04",
+      "quantityOnHand": 45,
+      "allocatedQuantity": 10,
+      "reorderPoint": 15,
+      "unitCost": 320.00,
+      "unitPrice": 540.00,
+      "status": "IN_STOCK"
+    },
+    {
+      "id": "INV-102",
+      "sku": "SKU-VAL-002",
+      "name": "Pneumatic Solenoid Valve 24V",
+      "category": "Pneumatics",
+      "binLocation": "WH-B-03-01",
+      "quantityOnHand": 8,
+      "allocatedQuantity": 2,
+      "reorderPoint": 20,
+      "unitCost": 85.00,
+      "unitPrice": 145.00,
+      "status": "LOW_STOCK"
+    },
+    {
+      "id": "INV-103",
+      "sku": "SKU-PLC-003",
+      "name": "Compact Modular PLC Unit",
+      "category": "Controllers",
+      "binLocation": "WH-A-01-08",
+      "quantityOnHand": 62,
+      "allocatedQuantity": 5,
+      "reorderPoint": 10,
+      "unitCost": 680.00,
+      "unitPrice": 1150.00,
+      "status": "IN_STOCK"
+    },
+    {
+      "id": "INV-104",
+      "sku": "SKU-BELT-004",
+      "name": "Heavy Duty Conveyor Belt 50m",
+      "category": "Mechanical",
+      "binLocation": "WH-YARD-09",
+      "quantityOnHand": 4,
+      "allocatedQuantity": 0,
+      "reorderPoint": 5,
+      "unitCost": 1200.00,
+      "unitPrice": 1950.00,
+      "status": "LOW_STOCK"
+    },
+    {
+      "id": "INV-105",
+      "sku": "SKU-SENS-005",
+      "name": "Laser Distance Optical Sensor",
+      "category": "Sensors",
+      "binLocation": "WH-B-08-02",
+      "quantityOnHand": 110,
+      "allocatedQuantity": 12,
+      "reorderPoint": 25,
+      "unitCost": 110.00,
+      "unitPrice": 195.00,
+      "status": "IN_STOCK"
+    }
+  ],
+  "orders": [
+    {
+      "id": "SO-2026-001",
+      "orderNumber": "ORD-9821",
+      "customerName": "Pacific Automation Systems",
+      "customerId": "CUST-001",
+      "status": "DRAFT",
+      "createdAt": "2026-10-17T14:15:00Z",
+      "items": [
+        { "sku": "SKU-MOT-001", "name": "Industrial Servo Motor 750W", "quantity": 5, "unitPrice": 540.00, "total": 2700.00 },
+        { "sku": "SKU-SENS-005", "name": "Laser Distance Optical Sensor", "quantity": 10, "unitPrice": 195.00, "total": 1950.00 }
+      ],
+      "subtotal": 4650.00,
+      "tax": 372.00,
+      "totalAmount": 5022.00
+    },
+    {
+      "id": "SO-2026-002",
+      "orderNumber": "ORD-9822",
+      "customerName": "Apex Robotics Ltd",
+      "customerId": "CUST-002",
+      "status": "CONFIRMED",
+      "createdAt": "2026-10-16T11:00:00Z",
+      "items": [
+        { "sku": "SKU-PLC-003", "name": "Compact Modular PLC Unit", "quantity": 2, "unitPrice": 1150.00, "total": 2300.00 }
+      ],
+      "subtotal": 2300.00,
+      "tax": 184.00,
+      "totalAmount": 2484.00
+    },
+    {
+      "id": "SO-2026-003",
+      "orderNumber": "ORD-9820",
+      "customerName": "Midwest Machine Works",
+      "customerId": "CUST-003",
+      "status": "SHIPPED",
+      "createdAt": "2026-10-15T09:30:00Z",
+      "items": [
+        { "sku": "SKU-MOT-001", "name": "Industrial Servo Motor 750W", "quantity": 4, "unitPrice": 540.00, "total": 2160.00 }
+      ],
+      "subtotal": 2160.00,
+      "tax": 172.80,
+      "totalAmount": 2332.80
+    }
+  ],
+  "ledger": [
+    {
+      "id": "JV-2026-1001",
+      "voucherNumber": "JV-001001",
+      "referenceOrder": "ORD-9820",
+      "timestamp": "2026-10-15T10:00:00Z",
+      "description": "Revenue recognition and AR for Order ORD-9820",
+      "entries": [
+        { "accountCode": "1100", "accountName": "Accounts Receivable", "type": "DEBIT", "amount": 2332.80 },
+        { "accountCode": "4000", "accountName": "Sales Revenue", "type": "CREDIT", "amount": 2160.00 },
+        { "accountCode": "2200", "accountName": "Sales Tax Payable", "type": "CREDIT", "amount": 172.80 }
+      ]
+    },
+    {
+      "id": "JV-2026-1002",
+      "voucherNumber": "JV-001002",
+      "referenceOrder": "ORD-9820",
+      "timestamp": "2026-10-15T10:05:00Z",
+      "description": "COGS recognition for Order ORD-9820",
+      "entries": [
+        { "accountCode": "5000", "accountName": "Cost of Goods Sold", "type": "DEBIT", "amount": 1280.00 },
+        { "accountCode": "1200", "accountName": "Inventory Asset", "type": "CREDIT", "amount": 1280.00 }
+      ]
+    }
+  ],
+  "parties": [
+    { "id": "CUST-001", "name": "Pacific Automation Systems", "type": "CUSTOMER", "creditLimit": 50000.00, "status": "ACTIVE" },
+    { "id": "CUST-002", "name": "Apex Robotics Ltd", "type": "CUSTOMER", "creditLimit": 75000.00, "status": "ACTIVE" },
+    { "id": "SUPP-001", "name": "Tokyo Precision Dynamics", "type": "SUPPLIER", "paymentTerms": "NET_30", "status": "ACTIVE" }
+  ]
+}
